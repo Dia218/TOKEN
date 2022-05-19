@@ -908,7 +908,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.7",
-  "updatedAt": "2022-05-13T04:37:11.181Z",
+  "updatedAt": "2022-05-19T16:19:19.845Z",
   "devdoc": {
     "details": "Simpler version of ERC20 interface See https://github.com/ethereum/EIPs/issues/179",
     "methods": {},
