@@ -25,7 +25,7 @@ contract GBUTManager {
 	// 특정 사용자에게 인센티브 지급
 	function putIncentive(address _user, uint256 _incentive) public {
 		require(_incentive <= INCENTIVE_LIMIT); 		//인센티브 제한은 일단 고정으로
-		gbuToken.transferFrom(admin, _user, _incentive);
+		gbuToken.transferFrom(admin, _user, _incentive);	//admin의 토큰을 사용자에게로 GBUTManager에게 전송 요청
 		//해당 사용자에게 tokenManager가 자신의 토큰을 회수할 수 있도록 허가하라는 이벤트 메시지?
 	}
 

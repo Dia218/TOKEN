@@ -34,12 +34,11 @@ contract GBUToken is StandardToken {//StandardToken을 상속하여 기능 활�
         return balanceOf(_user);
     }
 
-
-    function takeBackToken(address _user, uint256 _token) public onlyOwner{ //토큰 환수를 위한 기능
-        require(_token <= balances[_user]);
-        balances[_user] = balances[_user].sub(_token);
-        balances[admin] = balances[admin].add(_token);
-        emit Transfer(address(0), admin, _token);
+    function takeBackToken(address _user, uint256 _token) internal onlyOwner{ //토큰 환수를 위한 기능 admin만 사용할 수 있도록 하고 internal
+        require(_token <= balances[_user]); //사용자의 밸런스보다 작거나 같은 토큰량 검사
+        balances[_user] = balances[_user].sub(_token);  //사용자 밸런스 감소
+        balances[admin] = balances[admin].add(_token);  //admin 밸런스 증가
+        emit Transfer(address(0), admin, _token);   //이에 대한 전송 이벤트를 admin(address(0))에게 전달)
     }
 	modifier onlyOwner {	//기능 이름 onlyOnwer
 		require(msg.sender == admin);
