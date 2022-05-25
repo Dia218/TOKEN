@@ -6,11 +6,11 @@ contract GBUTManager {
 	StandardToken public gbuToken;	//GBUToken 기능 쓰기 위한 객체
 	address public admin;	//컨트랙을 만든 주인EOA 주소
 	uint256 private INCENTIVE_LIMIT;	//1회 인센티브 지급 제한량
-	constructor(address _GBUTManager, address _GBUToken, address _admin, uint256 _incentivelimit) public { 		
+	constructor(address _GBUToken, address _admin, uint256 _incentivelimit) public { 		
 		gbuToken = StandardToken(_GBUToken); 		
 		admin = _admin;
 		INCENTIVE_LIMIT = _incentivelimit;
-		gbuToken.approve(_GBUTManager, gbuToken.totalSupply());		
+		//gbuToken.approve(_GBUTManager, gbuToken.totalSupply());		
 		//GBUTManager가 admin의 토큰을 사용할 수 있도록 허가한다.
 	}
 
@@ -36,7 +36,7 @@ contract GBUTManager {
 	function viewBalanceOf(address _user) view public returns (uint256){
 		return gbuToken.balanceOf(_user);
 	}
-
+/*
  // 참여 사용자들에 대한 목록 관리 기능 
 	function viewUser(address _user) public returns (uint256[] memory){
 		//유저에 대한 추가 정보(주어진 인센티브량gbuToken.balanceOf(_user), 더 허용된 인센티브량gbuToken.allowance(admin, _user) 등 원하는 정보 추가할것)
@@ -44,7 +44,7 @@ contract GBUTManager {
 		userinfo[0] = gbuToken.balanceOf(_user);
 		userinfo[1] = gbuToken.allowance(admin, _user);
 		return userinfo;
-	}
+	}*/
 
     // 사용자 추가/삭제 기능 프론트관련으로. 백엔드에선 허가와 토큰 환수 모두만? 기능 확인하는 방법??
 	//사용자 추가기능
