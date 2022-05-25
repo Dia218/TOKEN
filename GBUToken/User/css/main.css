@@ -1,0 +1,119 @@
+body {
+    background-color:white;
+    padding: 2em;
+    font-family: 'Raleway','Source Sans Pro', 'Arial';
+}
+.container {
+    width: 50%;
+    margin: 0 auto;
+}
+label {
+    display:block;
+    margin-bottom:10px;
+}
+input {
+    padding:10px;
+    width: 50%;
+    margin-bottom: 1em;
+}
+button {
+    margin: 2em 0;
+    padding: 1em 4em;
+    display:block;
+}
+
+#instructor {
+    padding:1em;
+    background-color:#fff;
+    margin: 1em 0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+a {text-decoration: none;}
+li { list-style : none;}
+h1 { padding: 30px 30px;}
+body {
+    margin: 0 auto;
+    width:1200px;
+}
+div.pull-left { float: left; }
+div.bar { float: left; }
+#headercontainer {
+   background-color: navy;
+   color: white;
+   position: relative;
+   overflow: auto;
+}
+
+#header {
+    height: 200px;
+    position: relative;
+    background-color: navy;
+    color: white;
+}
+#nav {
+     border-top : 1px solid #C8C8C8;
+     border-bottom : 1px solid #C8C8C8;
+     margin-bottom: 20px;
+     height : 40px;
+ }
+ .detail {
+     float:left;
+     position: relative;
+ }
+ .detail :hover {
+     background : black;
+     color: white;
+ }
+ .menu-title {
+     display : block;
+     height:30px; line-height: 30px;
+     text-align: center;
+     padding: 5px 20px;
+     color: black;
+ }
+ div.list {
+ padding-top: 30px;
+}
+div.list>ul>li {
+   text-align: center;
+   color: black;
+   background: rgb(247, 232, 255);
+   font-size: 18px;
+}
+#footer {
+     text-align: center;
+     margin: 20px 20px;
+     background-color: rgb(238, 244, 253);
+ }
+#header {
+    height: 200px;
+    position: relative;
+    background-color: navy;
+    color: white;
+}
+#header>h1 :link{
+    text-decoration: none; 
+    color: white; 
+}
+#header>h1 :visited{
+    text-decoration: none; 
+    color: white; 
+}
+#header>h1 :hover{
+    text-decoration: none; 
+    color: white; 
+}
+#header>h1 :active{
+    text-decoration: none; 
+    color: white; 
+}
+@media screen and (max-width : 1500px){
+ #header{width: auto; float: fit-content;}
+ body{width:auto}
+ #nav>menu{width: auto; float: none}
+ #footer{width:auto; float:fit-content}
+}
