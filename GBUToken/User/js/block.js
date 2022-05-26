@@ -1,6 +1,6 @@
-import Web3, { Provider } from 'web3';
+var Web3 = require('web3');
 var web3;
-var address="0xF05B9aa391A4d5c6F9a0a7Cf1fD53Dd469d4b46f";   //GBUToken의 주소
+var address="0x466883F712b490d5eDe06Cd2866CD435231a6b53";   //GBUToken의 주소
 
 async function Connect(){
     await window.web3.currentProvider.enable();
@@ -385,4 +385,13 @@ function checkBalance(){
             $("#Balance").html(balance);
         });
     });
+}
+function takebackEventLog(){  //환수를 실행했음에 대한 정보
+  var contractAbi = abi;	//컴파일러에 의해 생성되는 GBUToken의 ABI 넣기
+  var ClientReceipt = web3.eth.contract(contractAbi);//가져온 abi로 javascript 객체인것처럼 상호작용하기 위한 작업
+  var clientReceiptContract = ClientReceipt.at("0x1234...ab67" /* address */);
+  //event Transfer(address indexed from, address indexed to, uint256 value);라는 ERC20Basic에 있는 이벤트에 대해서 가져오는 것임
+  var event = clientReceiptContract.Transfer(function(error, result) {
+     if (!error)console.log(result);  //가져온걸 result에 저장하고 event에 저장?
+  });
 }

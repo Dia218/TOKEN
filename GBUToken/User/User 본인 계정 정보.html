@@ -5,8 +5,7 @@
     <title>User 본인 계정 정보</title>
     
     <link rel="stylesheet" type="text/css" href="css/main.css">
-    <script src="js/block.js"></script>
-    <script src="./link.js"></script>
+    <script src="js/web3.min.js"></script>
 </head>
 <body>
     <header id="header">
@@ -31,7 +30,9 @@
     </nav>
     
     <div id="button">
-        <button onclick="Connect()">Connect Wallet</button>
+        <h2>계정 주소: <span class="showAccount"></span></h2>
+        <button class="enableEthereumButton">Enable Ethereum</button>
+        
     </div>
    
     <div id="footer">
@@ -39,6 +40,19 @@
             <li>© By_경기체인. All rights reserved.</li>
         </ul>
         </div>
+<script>
+    const ethereumButton = document.querySelector('.enableEthereumButton');
+    const showAccount = document.querySelector('.showAccount');
 
+    ethereumButton.addEventListener('click', () => {
+        getAccount();
+    });
+
+    async function getAccount() {
+        const accounts = await ethereum.request({ method: 'eth_accounts' });
+        const account = accounts[0];
+        showAccount.innerHTML = account;
+    }
+</script>
 </body>
 </html>

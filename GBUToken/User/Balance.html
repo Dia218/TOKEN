@@ -8,7 +8,6 @@
     <title>User Page</title>
 
     <link rel="stylesheet" type="text/css" href="css/main.css">
-    <script src="js/GBUToken.js"></script>
     <script src="js/web3.min.js"></script>
 </head>
 <body>
@@ -37,7 +36,7 @@
         <label for="name" class="col-lg-2 control-label"><h3>Balance</h3></label>
 		<p>Account : <input id="Account" type="text"> </p>
         <p>Balance : <input id="Balance" type="text"></p>
-		 <button id="checkBalance"  onclick="web3.eth.getAccounts()">Check Balance</button>
+		<button id="checkBalance">Check Balance</button>
     </div>
 	
     <div id="footer">
@@ -49,78 +48,29 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 
     <script>
-        $( document ).ready(function() {
-    console.log( "ready!" );
-    
-    if (typeof web3 !== 'undefined') {
-        web3 = new Web3(web3.currentProvider);
-    } else {
-            // set the provider you want from Web3.providers
-        web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
-    }
-    web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
-    /* Get Node Info */
-    web3.eth.getNodeInfo(function(error, result){
-        if(error){
-            console.log( "error" ,error);
-        }
-        else{
-            console.log( "result",result );
-            $('#NodeInfo').val(result);
-        }
-    });
-    
-    /*Get Balance */
-    web3.eth.getAccounts(function(error, accounts) {
-        if(error) {
-            console.log(error);
-        }
-        var _account = $('#Account').val(accounts[0]); //다른 지갑을 연결해도 accounts[0]가 되는데 필요한가?
-        web3.eth.getBalance(_account).then(function(result){
-            console.log( "Balance : " ,web3.utils.fromWei(result, 'ether'));
-            $('#Balance').val(web3.utils.fromWei(result, 'ether'));
-        });
-    });
-    /*
-    $('#checkBalance').click(function() {
-        var _account = $('#Account').val();
-        web3.eth.getBalance(_account).then(function(result){
-            console.log( "Balance : " ,web3.utils.fromWei(result, 'ether'));
-            $('#Balance').val(web3.utils.fromWei(result, 'ether'));
-        });
-    });
-    */
-    
-    /* Transfer */
-    $('#Transfer').click(function() {
-        $('#Tx').text('');
-        var _from = $('#From').val();
-        var _to = $('#To').val();
-        var _Amount = $('#Amount').val();
-        var txnObject = {
-            "from":_from,
-            "to": _to,
-            "value": web3.utils.toWei(_Amount,'ether'),
-            // "gas": 21000,         (optional)
-            // "gasPrice": 4500000,  (optional)
-            // "data": 'For testing' (optional)
-            // "nonce": 10           (optional)
-        }
-    
-        web3.eth.sendTransaction(txnObject, function(error, result){
-            if(error){
-                console.log( "Transaction error" ,error);
-            }
-            else{
-                var txn_hash = result; //Get transaction hash
-                $('#Tx').text(txn_hash);
-            }
-        });
+    $( document ).ready(function() {
+        console.log( "ready!" );
         
-    });
-    
+        if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        } else {
+                // set the provider you want from Web3.providers
+            web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
+        }
+        
+        //이더 가져오는 함수
+        function getBalance(){
+            var _account = $('#Account').val();
+            web3.eth.getBalance(_account).then(function(result){    //
+                console.log( "Balance : " ,web3.utils.fromWei(result, 'ether'));
+                $('#Balance').val(web3.utils.fromWei(result, 'ether'));
+            });
+        }
 
-});
+        $('#checkBalance').click(function() {   //checkBalance라는 ID를 가진 버튼을 클릭했을 때 실행
+            getBalance();
+        });
+    });
 
     </script>
 </body>
