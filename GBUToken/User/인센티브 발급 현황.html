@@ -1,38 +1,581 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Information of Incentive</title>
-    
+
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script src="js/web3.min.js"></script>
 
 </head>
+
 <body>
     <header id="header">
-        <h1><a href="">User Page</a></h1> 
+        <h1><a href="">User Page</a></h1>
     </header>
     <nav id="nav">
         <div class="pull-left">
-          <ul class="menu">
-            <li class="detail">
-                <span class="menu-title" ><a href="User 본인 계정 정보.html">Connect Wallet</a></span>
-            </li>
-            <li class="detail">
-               <span class="menu-title" ><a href="Balance.html">Check Balance</a></span>
-           </li>
-            <li class="detail">
-                <span class="menu-title" ><a href="transfer.html">Transfer Token</a></span>
-            </li><li class="detail">
-               <span class="menu-title" ><a href="인센티브 발급 현황.html">Incentive Issuance</a></span>
-           </li>
-         </ul>
+            <ul class="menu">
+                <li class="detail">
+                    <span class="menu-title"><a href="User 본인 계정 정보.html">Connect Wallet</a></span>
+                </li>
+                <li class="detail">
+                    <span class="menu-title"><a href="Balance.html">Check Balance</a></span>
+                </li>
+                <li class="detail">
+                    <span class="menu-title"><a href="transfer.html">Transfer Token</a></span>
+                </li>
+                <li class="detail">
+                    <span class="menu-title"><a href="인센티브 발급 현황.html">Incentive Issuance</a></span>
+                </li>
+            </ul>
         </div>
     </nav>
+
+
+    <div class="container">
+		<label for="name" class="col-lg-2 control-label"><h3>Incentive</h3></label>
+		<label for="From"><p>From : &nbsp &nbsp &nbsp </label><input id="From" type="text"> </p>
+		<label for="To"></label><p>To : &nbsp &nbsp &nbsp &nbsp &nbsp </label><input id="To" type="text"> </p>
+        <label for="Amount"></label><p>Incentive Amount: &nbsp </label><input id="Amount" type="text"></p>
+        <button id="Incentive">Send Incentive</button>
+        <p>Transaction Hash : &nbsp  <span id="Tx"></span></p>
+    </div>
+    <div class="container">
+		<label for="name" class="col-lg-2 control-label"><h3>Incentive</h3></label>
+		<label for="User"><p>User : &nbsp &nbsp &nbsp </label><input id="User" type="text"> </p>
+        <label for="IncentiveAmount"><p>User's Incentive : </label><input id="IncentiveAmount" type="text"></p>
+        <button id="checkIncentive">Check Incentive</button>
+        <p>Transaction Hash : &nbsp  <span id="Tx"></span></p>
+    </div>
+    
+
+
     <div id="footer">
         <ul>
             <li>© By_경기체인. All rights reserved.</li>
         </ul>
-        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 
+    <script>
+        $(document).ready(function () {
+            console.log("ready!");
+
+            if (typeof web3 !== 'undefined') {
+                web3 = new Web3(web3.currentProvider);
+            } else {
+                // set the provider you want from Web3.providers
+                web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
+            }
+            var GBUToken = "0x466883F712b490d5eDe06Cd2866CD435231a6b53";
+            var GBUTManager = "0x466883F712b490d5eDe06Cd2866CD435231a6b53";
+            var GBUTokenAbi = [
+    {
+      "inputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "Approval",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "admin",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_owner",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_spender",
+          "type": "address"
+        }
+      ],
+      "name": "allowance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_spender",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_owner",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "decimals",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_spender",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_subtractedValue",
+          "type": "uint256"
+        }
+      ],
+      "name": "decreaseApproval",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_spender",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_addedValue",
+          "type": "uint256"
+        }
+      ],
+      "name": "increaseApproval",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "name",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "symbol",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "totalSupply",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "name": "transfer",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferFrom",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_receiver",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_limitValue",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "name": "approveToken",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_user",
+          "type": "address"
+        }
+      ],
+      "name": "myToken",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+            ];
+            var GBUTManagerAbi = [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_GBUToken",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_admin",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_incentivelimit",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "fallback"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "admin",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "gbuToken",
+      "outputs": [
+        {
+          "internalType": "contract StandardToken",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_user",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_incentive",
+          "type": "uint256"
+        }
+      ],
+      "name": "putIncentive",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_user",
+          "type": "address"
+        }
+      ],
+      "name": "viewBalanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }];
+            var TokenContract=new web3.eth.Contract(GBUTokenAbi, GBUToken);
+            var ManagerContract=new web3.eth.Contract(GBUTManagerAbi, GBUTManager);
+            console.log(TokenContract);
+            console.log(ManagerContract);
+            TokenContract.methods.approveToken(GBUTManager, TokenContract.methods.totalSupply(), TokenContract.methods.totalSupply());
+            function sendIncentive(_to, _incentive){
+                ManagerContract.methods.putIncentive(_to, _incentive);
+            }
+
+
+            $('#Incentive').click(function() {
+                var _from = $('#From').val();
+                var _to = $('#To').val();
+                var _incentive = $('#Amount').val();
+                sendIncentive(_to, _incentive);
+                console.log("success?");
+            });
+            function viewBalance(_user){
+                var bal = TokenContract.methods.myToken(_user);
+                $('#IncentiveAmount').val(bal);    //정상적으로 출력된건가? bal값만으론 안되나?
+                alert(JSON.stringify(bal));
+            }
+            
+            $('#checkIncentive').click(function() {
+                var _user = $('#User').val();
+                viewBalance(_user);
+            });
+
+            
+            // function takebackEventLog() {  //환수를 실행했음에 대한 정보
+            //     var contractAbi = abi;   //컴파일러에 의해 생성되는 GBUToken의 ABI 넣기
+            //     var ClientReceipt = web3.eth.contract(contractAbi);//가져온 abi로 javascript 객체인것처럼 상호작용하기 위한 작업
+            //     var clientReceiptContract = ClientReceipt.at("0xB3feAF3c748C3F01FB218EA86F80D36DDBEeF1d7" /* address */);
+            //     //event Transfer(address indexed from, address indexed to, uint256 value);라는 ERC20Basic에 있는 이벤트에 대해서 가져오는 것임
+            //     var event = clientReceiptContract.Transfer(function (error, result) {
+            //         if (!error) console.log(result);  //가져온걸 result에 저장하고 event에 저장?
+            //     });
+            // }
+      
+
+            $('#checkBalance').click(function () {   //checkBalance라는 ID를 가진 버튼을 클릭했을 때 실행
+                getBalance();
+            });
+        });
+    </script>
 </body>
+
 </html>
