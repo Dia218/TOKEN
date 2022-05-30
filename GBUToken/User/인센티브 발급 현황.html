@@ -36,7 +36,7 @@
 
     <div class="container">
 		<label for="name" class="col-lg-2 control-label"><h3>Incentive</h3></label>
-		<label for="From"><p>From : &nbsp &nbsp &nbsp </label><input id="From" type="text"> </p>
+		<label for="From"><p>Admin : &nbsp &nbsp &nbsp </label><input id="From" type="text"> </p>
 		<label for="To"></label><p>To : &nbsp &nbsp &nbsp &nbsp &nbsp </label><input id="To" type="text"> </p>
         <label for="Amount"></label><p>Incentive Amount: &nbsp </label><input id="Amount" type="text"></p>
         <button id="Incentive">Send Incentive</button>
@@ -45,7 +45,7 @@
     <div class="container">
 		<label for="name" class="col-lg-2 control-label"><h3>Incentive</h3></label>
 		<label for="User"><p>User : &nbsp &nbsp &nbsp </label><input id="User" type="text"> </p>
-        <label for="IncentiveAmount"><p>User's Incentive : </label><input id="IncentiveAmount" type="text"></p>
+        <label for="IncentiveAmount"><p>User's Incentive : </label><input id="IncentiveAmount" type="text" disabled='disabled'></p>
         <button id="checkIncentive">Check Incentive</button>
         <p>Transaction Hash : &nbsp  <span id="Tx"></span></p>
     </div>
@@ -61,6 +61,7 @@
 
     <script>
         $(document).ready(function () {
+          
             console.log("ready!");
 
             if (typeof web3 !== 'undefined') {
@@ -69,8 +70,8 @@
                 // set the provider you want from Web3.providers
                 web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
             }
-            var GBUToken = "0x466883F712b490d5eDe06Cd2866CD435231a6b53";
-            var GBUTManager = "0x466883F712b490d5eDe06Cd2866CD435231a6b53";
+            var GBUToken = "0xe3CFa5A064cB7181557727bf717290d287f82245";
+            var GBUTManager = "0x0321B4CEE14E839641e75A1556391711291d809a";
             var GBUTokenAbi = [
     {
       "inputs": [],
@@ -430,8 +431,27 @@
       "payable": false,
       "stateMutability": "view",
       "type": "function"
-    }
-            ];
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_user",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_token",
+          "type": "uint256"
+        }
+      ],
+      "name": "takeBackToken",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }];
             var GBUTManagerAbi = [
     {
       "inputs": [
@@ -533,25 +553,51 @@
     }];
             var TokenContract=new web3.eth.Contract(GBUTokenAbi, GBUToken);
             var ManagerContract=new web3.eth.Contract(GBUTManagerAbi, GBUTManager);
+            
+            
             console.log(TokenContract);
             console.log(ManagerContract);
-            TokenContract.methods.approveToken(GBUTManager, TokenContract.methods.totalSupply(), TokenContract.methods.totalSupply());
-            function sendIncentive(_to, _incentive){
-                ManagerContract.methods.putIncentive(_to, _incentive);
+            //토큰 매니저가 GBU토큰에 대해서 전체 토큰량만큼 대신 전송가능하도록 허락
+            TokenContract.methods.totalSupply().call().then(function (totalSupply) {
+              console.log(totalSupply);
+              try{//GBUTManager가 자신의 토큰을 대신 전송이 가능하도록 허가
+                approveTokens(GBUTManager, totalSupply, totalSupply);
+              }catch(err) {
+                console.log(err);
+              }
+            });
+
+            //approve 기능 가져오기
+            async function approveTokens(_receiver, _limitValue, _value){
+              let h = await TokenContract.methods.approveToken(GBUTManager, _limitValue, _value).call();
             }
 
+            //토큰 전송 기능
+            async function sendIncentive(_from, _to, _incentive){
+              let q = await TokenContract.methods.transferFrom(_from, _to, _incentive).call();
+                //await ManagerContract.methods.putIncentive(_to, _incentive).call();
+            }
 
             $('#Incentive').click(function() {
                 var _from = $('#From').val();
                 var _to = $('#To').val();
                 var _incentive = $('#Amount').val();
-                sendIncentive(_to, _incentive);
-                console.log("success?");
-            });
-            function viewBalance(_user){
-                var bal = TokenContract.methods.myToken(_user);
-                $('#IncentiveAmount').val(bal);    //정상적으로 출력된건가? bal값만으론 안되나?
-                alert(JSON.stringify(bal));
+                approveTokens(GBUTManager, _incentive, _incentive).then(
+                  sendIncentive(_from, _to, _incentive)
+                );
+                
+          });
+
+
+            //토큰 확인 기능
+            async function viewBalance(_user){
+              try{
+                var bal = await TokenContract.methods.myToken(_user).call();
+              }catch(err) {
+                alert(err); // TypeError: failed to fetch
+              }
+              await $('#IncentiveAmount').val(bal);    //정상적으로 출력된건가? bal값만으론 안되나?
+              await console.log(bal);
             }
             
             $('#checkIncentive').click(function() {
@@ -574,7 +620,10 @@
             $('#checkBalance').click(function () {   //checkBalance라는 ID를 가진 버튼을 클릭했을 때 실행
                 getBalance();
             });
+
+
         });
+     
     </script>
 </body>
 

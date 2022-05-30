@@ -59,9 +59,9 @@
         }
         
         //이더 가져오는 함수
-        function getBalance(){
+        async function getBalance(){
             var _account = $('#Account').val();
-            web3.eth.getBalance(_account).then(function(result){    //
+            web3.eth.getBalance(_account).then(function(result){
                 console.log( "Balance : " ,web3.utils.fromWei(result, 'ether'));
                 $('#Balance').val(web3.utils.fromWei(result, 'ether'));
             });

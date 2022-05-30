@@ -40,7 +40,6 @@
         <label for="Amount"></label><p>Amount : &nbsp </label><input id="Amount" type="text"></p>
         <button id="Transfer">Transfer</button>
         <p>Transaction Hash : &nbsp  <span id="Tx"></span></p>
-
     </div>
 	<div id="footer">
         <ul>
@@ -57,6 +56,8 @@
                 // set the provider you want from Web3.providers
             web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
         }
+
+
     $('#Transfer').click(function() {
         $('#Tx').text('');
         var _from = $('#From').val();
