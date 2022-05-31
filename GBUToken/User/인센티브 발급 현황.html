@@ -32,9 +32,13 @@
             </ul>
         </div>
     </nav>
-
-
+    <div class="container3">
+      <label for="From"><p>From : &nbsp &nbsp &nbsp </label><input id="From" type="text" disabled="disabled"> </p>
+      <button id="Approve">approve</button>
+    </div>
+    
     <div class="container">
+      
 		<label for="name" class="col-lg-2 control-label"><h3>Incentive</h3></label>
 		<label for="From"><p>From : &nbsp &nbsp &nbsp </label><input id="From" type="text" disabled="disabled"> </p>
 		<label for="To"></label><p>To : &nbsp &nbsp &nbsp &nbsp &nbsp </label><input id="To" type="text"> </p>
@@ -42,7 +46,7 @@
         <button id="Incentive">Send Incentive</button>
         <p>Transaction Hash : &nbsp  <span id="Tx"></span></p>
     </div>
-    <div class="container">
+    <div class="container2">
 		<label for="name" class="col-lg-2 control-label"><h3>Incentive</h3></label>
 		<label for="User"><p>User : &nbsp &nbsp &nbsp </label><input id="User" type="text"> </p>
         <label for="IncentiveAmount"><p>User's Incentive : </label><input id="IncentiveAmount" type="text" disabled='disabled'></p>
@@ -80,9 +84,10 @@
             //미리 메타마스크의 내 지갑 주소를 적어두기
             getAccount().then(function(account){
                 $('#From').val(account);
+                $('#User').val(account);
             });
-            var GBUToken = "0x4424e1eecd446e6886a19bb05D0aFEe8D4414903";
-            var GBUTManager = "0x1924Bc51C2bc23F5aB30Aa731F430d1503D10409";
+            var GBUToken = "0x4Ce8255b96854b401820c7325018524131b4D9b0";
+            var GBUTManager = "0x91DE8a090Dd3BA43c6D0c30C9E64677613462f01";
             var GBUTokenAbi = [
     {
       "inputs": [],
@@ -565,14 +570,14 @@
             var TokenContract=new web3.eth.Contract(GBUTokenAbi, GBUToken);
             var ManagerContract=new web3.eth.Contract(GBUTManagerAbi, GBUTManager);
             
-            
             console.log(TokenContract);
             console.log(ManagerContract);
             //토큰 매니저가 GBU토큰에 대해서 전체 토큰량만큼 대신 전송가능하도록 허락
             TokenContract.methods.totalSupply().call().then(function (totalSupply) {
               try{//GBUTManager가 자신의 토큰을 대신 전송이 가능하도록 허가
+                
+                //approveTokens(GBUTManager, totalSupply, totalSupply); //admin이 인센티브 지급할 때 필요
                 console.log(totalSupply);
-                approveTokens(GBUTManager, totalSupply, totalSupply);
               }catch(err) {
                 console.log(err);
               }
@@ -581,16 +586,21 @@
             //approve 기능 가져오기
             async function approveTokens(_receiver, _limitValue, _value){
               var address = await getAccount();
-              console.log(address);
-              //이부분이 문젠가?
-              await TokenContract.methods.approveToken(_receiver, _limitValue, _value).call({from: address}); //
+              //call은 read만 하는 function인 경우, send는 tx를 만들어야 하는 function의 경우 사용
+              await TokenContract.methods.approveToken(_receiver, _limitValue, _value).send({from: address}); 
             }
+
+            $('#Approve').click(function() {
+                var _user = $('#From').val();
+                approveTokens(GBUTManager, 1000, 1000);
+            });
 
             //토큰 전송 기능
             async function sendIncentive(_from, _to, _incentive){
               var address = await getAccount();
+              console.log(address);
               //await TokenContract.methods.transferFrom(_from, _to, _incentive);
-              await ManagerContract.methods.putIncentive(_to, _incentive).call({from: address});
+              await ManagerContract.methods.putIncentive(_to, _incentive).send({from: address});
             }
             //사용자간 인센티브 전송 버튼을 클릭했을 때
             $('#Incentive').click(function() {
@@ -598,7 +608,8 @@
                 var _to = $('#To').val();
                 var _incentive = $('#Amount').val();
                 approveTokens(GBUTManager, 1000, _incentive); //GBUTManager에게 해당 인센티브에 대해 대신 전송을 허가하고
-                sendIncentive(_from, _to, _incentive).then(console.log);
+                sendIncentive(_from, _to, _incentive);
+               // tranferEventLog(_from);
             });
 
 
@@ -617,7 +628,15 @@
                 var _user = $('#User').val();
                 viewBalance(_user);
             });
-
+            // async function tranferEventLog(receiver) {  //환수를 실행했음에 대한 정보
+            //     var contractAbi = GBUTokenAbi;   //컴파일러에 의해 생성되는 GBUToken의 ABI 넣기
+            //     var ClientReceipt = web3.eth.contract(contractAbi);//가져온 abi로 javascript 객체인것처럼 상호작용하기 위한 작업
+            //     var clientReceiptContract = ClientReceipt.at(receiver /* address */);
+            //     //event Transfer(address indexed from, address indexed to, uint256 value);라는 ERC20Basic에 있는 이벤트에 대해서 가져오는 것임
+            //     var event = clientReceiptContract.Transfer(function (error, result) {
+            //         if (!error) console.log(result);  //가져온걸 result에 저장하고 event에 저장?
+            //     });
+            // }
             
             // function takebackEventLog() {  //환수를 실행했음에 대한 정보
             //     var contractAbi = abi;   //컴파일러에 의해 생성되는 GBUToken의 ABI 넣기
@@ -628,11 +647,7 @@
             //         if (!error) console.log(result);  //가져온걸 result에 저장하고 event에 저장?
             //     });
             // }
-      
-
-            $('#checkBalance').click(function () {   //checkBalance라는 ID를 가진 버튼을 클릭했을 때 실행
-                getBalance();
-            });
+    
 
 
         });

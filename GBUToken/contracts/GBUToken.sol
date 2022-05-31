@@ -5,7 +5,7 @@ import 'openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
 contract GBUToken is StandardToken {//StandardToken을 상속하여 기능 활용
     string public constant name = 'GBU Data Links Token';
     string public constant symbol = 'GBU';
-    uint8 public constant decimals = 2;
+    uint8 public constant decimals = 2; //0.01단위로
     uint constant _initial_supply  = 2100000000;
     address public admin;   //토큰 쪽에도 컨트랙 만든 사람 인식할 수 있도록
 
