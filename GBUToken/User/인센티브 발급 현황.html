@@ -6,7 +6,7 @@
     <title>Information of Incentive</title>
 
     <link rel="stylesheet" type="text/css" href="css/main.css">
-    <script src="js/web3.min.js"></script>
+    <script src="js/web31.min.js"></script>
 
 </head>
 
@@ -36,7 +36,7 @@
 
     <div class="container">
 		<label for="name" class="col-lg-2 control-label"><h3>Incentive</h3></label>
-		<label for="From"><p>Admin : &nbsp &nbsp &nbsp </label><input id="From" type="text"> </p>
+		<label for="From"><p>From : &nbsp &nbsp &nbsp </label><input id="From" type="text" disabled="disabled"> </p>
 		<label for="To"></label><p>To : &nbsp &nbsp &nbsp &nbsp &nbsp </label><input id="To" type="text"> </p>
         <label for="Amount"></label><p>Incentive Amount: &nbsp </label><input id="Amount" type="text"></p>
         <button id="Incentive">Send Incentive</button>
@@ -64,14 +64,25 @@
           
             console.log("ready!");
 
-            if (typeof web3 !== 'undefined') {
-                web3 = new Web3(web3.currentProvider);
-            } else {
-                // set the provider you want from Web3.providers
-                web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
-            }
-            var GBUToken = "0xe3CFa5A064cB7181557727bf717290d287f82245";
-            var GBUTManager = "0x0321B4CEE14E839641e75A1556391711291d809a";
+          if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+          } else {
+            // set the provider you want from Web3.providers
+            web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
+          }
+
+          async function getAccount() {
+            const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+            const account = accounts[0];
+            return account;
+          }
+            console.log(getAccount());
+            //미리 메타마스크의 내 지갑 주소를 적어두기
+            getAccount().then(function(account){
+                $('#From').val(account);
+            });
+            var GBUToken = "0x4424e1eecd446e6886a19bb05D0aFEe8D4414903";
+            var GBUTManager = "0x1924Bc51C2bc23F5aB30Aa731F430d1503D10409";
             var GBUTokenAbi = [
     {
       "inputs": [],
@@ -559,8 +570,8 @@
             console.log(ManagerContract);
             //토큰 매니저가 GBU토큰에 대해서 전체 토큰량만큼 대신 전송가능하도록 허락
             TokenContract.methods.totalSupply().call().then(function (totalSupply) {
-              console.log(totalSupply);
               try{//GBUTManager가 자신의 토큰을 대신 전송이 가능하도록 허가
+                console.log(totalSupply);
                 approveTokens(GBUTManager, totalSupply, totalSupply);
               }catch(err) {
                 console.log(err);
@@ -569,24 +580,26 @@
 
             //approve 기능 가져오기
             async function approveTokens(_receiver, _limitValue, _value){
-              let h = await TokenContract.methods.approveToken(GBUTManager, _limitValue, _value).call();
+              var address = await getAccount();
+              console.log(address);
+              //이부분이 문젠가?
+              await TokenContract.methods.approveToken(_receiver, _limitValue, _value).call({from: address}); //
             }
 
             //토큰 전송 기능
             async function sendIncentive(_from, _to, _incentive){
-              let q = await TokenContract.methods.transferFrom(_from, _to, _incentive).call();
-                //await ManagerContract.methods.putIncentive(_to, _incentive).call();
+              var address = await getAccount();
+              //await TokenContract.methods.transferFrom(_from, _to, _incentive);
+              await ManagerContract.methods.putIncentive(_to, _incentive).call({from: address});
             }
-
+            //사용자간 인센티브 전송 버튼을 클릭했을 때
             $('#Incentive').click(function() {
                 var _from = $('#From').val();
                 var _to = $('#To').val();
                 var _incentive = $('#Amount').val();
-                approveTokens(GBUTManager, _incentive, _incentive).then(
-                  sendIncentive(_from, _to, _incentive)
-                );
-                
-          });
+                approveTokens(GBUTManager, 1000, _incentive); //GBUTManager에게 해당 인센티브에 대해 대신 전송을 허가하고
+                sendIncentive(_from, _to, _incentive).then(console.log);
+            });
 
 
             //토큰 확인 기능

@@ -35,7 +35,7 @@
 
     <div class="container">
 		<label for="name" class="col-lg-2 control-label"><h3>Transfer</h3></label>
-		<label for="From"><p>From : &nbsp &nbsp &nbsp </label><input id="From" type="text"> </p>
+		<label for="From"><p>From : &nbsp &nbsp &nbsp </label><input id="From" type="text" disabled="disabled"> </p>
 		<label for="To"></label><p>To : &nbsp &nbsp &nbsp &nbsp &nbsp </label><input id="To" type="text"> </p>
         <label for="Amount"></label><p>Amount : &nbsp </label><input id="Amount" type="text"></p>
         <button id="Transfer">Transfer</button>
@@ -56,7 +56,16 @@
                 // set the provider you want from Web3.providers
             web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
         }
-
+        //본인의 메타마스크 지갑의 주소를 반환
+        async function getAccount() {
+            const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+            const account = accounts[0];
+            return account;
+        }
+        //미리 메타마스크의 내 지갑 주소를 적어두기
+        getAccount().then(function(account){
+            $('#From').val(account);
+        });
 
     $('#Transfer').click(function() {
         $('#Tx').text('');

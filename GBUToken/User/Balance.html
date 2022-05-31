@@ -57,7 +57,16 @@
                 // set the provider you want from Web3.providers
             web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
         }
-        
+        //본인의 메타마스크 지갑의 주소를 반환
+        async function getAccount() {
+            const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+            const account = accounts[0];
+            return account;
+        }
+        //미리 메타마스크의 내 지갑 주소를 적어두기
+        getAccount().then(function(account){
+            $('#Account').val(account);
+        });
         //이더 가져오는 함수
         async function getBalance(){
             var _account = $('#Account').val();
