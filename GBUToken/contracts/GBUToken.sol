@@ -21,14 +21,6 @@ contract GBUToken is StandardToken {//StandardToken을 상속하여 기능 활�
         require(_value <= _limitValue);
         approve(_receiver, _value); // receiver에게 sender의 계좌에서 value만큼 뺄 수 있는 권한을 줘라
     }
-    
-//- user가 다른 여려 명의 user에게 token을 동시에 전송할 수 있는 기능(필요한지 생각) 프론트에서 여러 withdraw 해주는 게 좋지 않을까
-/*    function manytrans(address[] memory receivers, uint[] memory values) public {
-        for(uint i=0; i<receivers.length; i++) {
-            trans(receivers[i], values[i]);
-        }
-    }
-*/
 //- user들의 token 현황 관리 balanceOf 등 이용?
     function myToken(address _user) public view returns (uint256) {
         return balanceOf(_user);

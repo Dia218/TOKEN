@@ -21,12 +21,12 @@
                  <span class="menu-title" ><a href="User 본인 계정 정보.html">Connect Wallet</a></span>
              </li>
              <li class="detail">
-                <span class="menu-title" ><a href="Balance.html">Check Balance</a></span>
+                <span class="menu-title" ><a href="Balance.html">Check Ether's Balance</a></span>
             </li>
              <li class="detail">
-                 <span class="menu-title" ><a href="transfer.html">Transfer Token</a></span>
+                 <span class="menu-title" ><a href="transfer.html">Transfer Ether</a></span>
              </li><li class="detail">
-                <span class="menu-title" ><a href="인센티브 발급 현황.html">Incentive Issuance</a></span>
+                <span class="menu-title" ><a href="인센티브 발급 현황.html">Approve & Check & Transfer Incentive</a></span>
             </li>
          </ul>
         </div>
@@ -51,12 +51,13 @@
     $( document ).ready(function() {
         console.log( "ready!" );
         
-        if (typeof web3 !== 'undefined') {
+        if (typeof window.ethereum !== 'undefined') {
             web3 = new Web3(web3.currentProvider);
-        } else {
-                // set the provider you want from Web3.providers
-            web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
         }
+        else{
+            web3 = ethereum.request({ method: 'eth_requestAccounts' });
+        }
+
         //본인의 메타마스크 지갑의 주소를 반환
         async function getAccount() {
             const accounts = await ethereum.request({ method: 'eth_requestAccounts' });

@@ -21,40 +21,39 @@
                     <span class="menu-title"><a href="User 본인 계정 정보.html">Connect Wallet</a></span>
                 </li>
                 <li class="detail">
-                    <span class="menu-title"><a href="Balance.html">Check Balance</a></span>
+                    <span class="menu-title"><a href="Balance.html">Check Ether's Balance</a></span>
                 </li>
                 <li class="detail">
-                    <span class="menu-title"><a href="transfer.html">Transfer Token</a></span>
+                    <span class="menu-title"><a href="transfer.html">Transfer Ether</a></span>
                 </li>
                 <li class="detail">
-                    <span class="menu-title"><a href="인센티브 발급 현황.html">Incentive Issuance</a></span>
+                    <span class="menu-title"><a href="인센티브 발급 현황.html">Approve & Check & Transfer Incentive</a></span>
                 </li>
             </ul>
         </div>
     </nav>
-    <div class="container3">
-      <label for="From"><p>From : &nbsp &nbsp &nbsp </label><input id="From" type="text" disabled="disabled"> </p>
+
+
+    <div class="container">
+      <label for="name" class="col-lg-2 control-label"><h3>전송 위임 허용량 설정(1회 10만 토큰 제한)</h3></label>
+      <label for="Who"><p>User : &nbsp &nbsp &nbsp </label><input id="Who" type="text" disabled="disabled"> </p>
+      <label for="ApproveLimit"><p>ApproveLimit : &nbsp &nbsp &nbsp </label><input id="ApproveLimit" type="text"> </p>
       <button id="Approve">approve</button>
     </div>
     
     <div class="container">
-      
-		<label for="name" class="col-lg-2 control-label"><h3>Incentive</h3></label>
+		<label for="name" class="col-lg-2 control-label"><h3>인센티브 전송</h3></label>
 		<label for="From"><p>From : &nbsp &nbsp &nbsp </label><input id="From" type="text" disabled="disabled"> </p>
 		<label for="To"></label><p>To : &nbsp &nbsp &nbsp &nbsp &nbsp </label><input id="To" type="text"> </p>
         <label for="Amount"></label><p>Incentive Amount: &nbsp </label><input id="Amount" type="text"></p>
         <button id="Incentive">Send Incentive</button>
-        <p>Transaction Hash : &nbsp  <span id="Tx"></span></p>
     </div>
-    <div class="container2">
-		<label for="name" class="col-lg-2 control-label"><h3>Incentive</h3></label>
+    <div class="container">
+		<label for="name" class="col-lg-2 control-label"><h3>인센티브 확인</h3></label>
 		<label for="User"><p>User : &nbsp &nbsp &nbsp </label><input id="User" type="text"> </p>
         <label for="IncentiveAmount"><p>User's Incentive : </label><input id="IncentiveAmount" type="text" disabled='disabled'></p>
         <button id="checkIncentive">Check Incentive</button>
-        <p>Transaction Hash : &nbsp  <span id="Tx"></span></p>
     </div>
-    
-
 
     <div id="footer">
         <ul>
@@ -65,14 +64,12 @@
 
     <script>
         $(document).ready(function () {
-          
             console.log("ready!");
-
-          if (typeof web3 !== 'undefined') {
-            web3 = new Web3(web3.currentProvider);
-          } else {
-            // set the provider you want from Web3.providers
-            web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
+          if (typeof window.ethereum !== 'undefined') {
+              web3 = new Web3(web3.currentProvider);
+          }
+          else{
+              web3 = ethereum.request({ method: 'eth_requestAccounts' });
           }
 
           async function getAccount() {
@@ -83,11 +80,12 @@
             console.log(getAccount());
             //미리 메타마스크의 내 지갑 주소를 적어두기
             getAccount().then(function(account){
-                $('#From').val(account);
-                $('#User').val(account);
+              $('#Who').val(account);
+              $('#From').val(account);
+              $('#User').val(account);
             });
-            var GBUToken = "0x4Ce8255b96854b401820c7325018524131b4D9b0";
-            var GBUTManager = "0x91DE8a090Dd3BA43c6D0c30C9E64677613462f01";
+            var GBUToken = "0xfa9813C429840533e67c09ECB03463A716BcB894";
+            var GBUTManager = "0x04741252D50FfC4ffaA255B9b87b39E604b10cCa";
             var GBUTokenAbi = [
     {
       "inputs": [],
@@ -547,6 +545,31 @@
       "type": "function"
     },
     {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_incentive",
+          "type": "uint256"
+        }
+      ],
+      "name": "sendIncentive",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "constant": true,
       "inputs": [
         {
@@ -572,16 +595,6 @@
             
             console.log(TokenContract);
             console.log(ManagerContract);
-            //토큰 매니저가 GBU토큰에 대해서 전체 토큰량만큼 대신 전송가능하도록 허락
-            TokenContract.methods.totalSupply().call().then(function (totalSupply) {
-              try{//GBUTManager가 자신의 토큰을 대신 전송이 가능하도록 허가
-                
-                //approveTokens(GBUTManager, totalSupply, totalSupply); //admin이 인센티브 지급할 때 필요
-                console.log(totalSupply);
-              }catch(err) {
-                console.log(err);
-              }
-            });
 
             //approve 기능 가져오기
             async function approveTokens(_receiver, _limitValue, _value){
@@ -589,29 +602,35 @@
               //call은 read만 하는 function인 경우, send는 tx를 만들어야 하는 function의 경우 사용
               await TokenContract.methods.approveToken(_receiver, _limitValue, _value).send({from: address}); 
             }
-
+            //TokenManager를 통한 토큰 전송 허용량 설정
             $('#Approve').click(function() {
-                var _user = $('#From').val();
-                approveTokens(GBUTManager, 1000, 1000);
+                var approveAmount = $('#ApproveLimit').val();
+                approveTokens(GBUTManager, 100000, approveAmount);  //10만정도로 일단 제한량 둠
             });
 
-            //토큰 전송 기능
+            //사용자간의 토큰 전송 기능
             async function sendIncentive(_from, _to, _incentive){
-              var address = await getAccount();
-              console.log(address);
-              //await TokenContract.methods.transferFrom(_from, _to, _incentive);
-              await ManagerContract.methods.putIncentive(_to, _incentive).send({from: address});
+              await ManagerContract.methods.sendIncentive(_from, _to, _incentive).send({from: _from});
             }
+            async function tranferEventLog() {  //실행했음에 대한 정보
+                var contractAbi = GBUTokenAbi;   //컴파일러에 의해 생성되는 GBUToken의 ABI 넣기
+                var ClientReceipt = web3.eth.contract(contractAbi);//가져온 abi로 javascript 객체인것처럼 상호작용하기 위한 작업
+                var clientReceiptContract = ClientReceipt.at(receiver /* address */);
+                //event Transfer(address indexed from, address indexed to, uint256 value);라는 ERC20Basic에 있는 이벤트에 대해서 가져오는 것임
+                var event = clientReceiptContract.Transfer(function (error, result) {
+                    if (!error) console.log(result);  //가져온걸 result에 저장하고 event에 저장?
+                });
+                return event;
+            }
+
             //사용자간 인센티브 전송 버튼을 클릭했을 때
             $('#Incentive').click(function() {
                 var _from = $('#From').val();
                 var _to = $('#To').val();
                 var _incentive = $('#Amount').val();
-                approveTokens(GBUTManager, 1000, _incentive); //GBUTManager에게 해당 인센티브에 대해 대신 전송을 허가하고
                 sendIncentive(_from, _to, _incentive);
-               // tranferEventLog(_from);
+                //var event = tranferEventLog();  //이벤트 로그 저장
             });
-
 
             //토큰 확인 기능
             async function viewBalance(_user){
@@ -620,36 +639,13 @@
               }catch(err) {
                 alert(err); // TypeError: failed to fetch
               }
-              await $('#IncentiveAmount').val(bal);    //정상적으로 출력된건가? bal값만으론 안되나?
-              await console.log(bal);
+              await $('#IncentiveAmount').val(bal);
             }
             
             $('#checkIncentive').click(function() {
                 var _user = $('#User').val();
                 viewBalance(_user);
             });
-            // async function tranferEventLog(receiver) {  //환수를 실행했음에 대한 정보
-            //     var contractAbi = GBUTokenAbi;   //컴파일러에 의해 생성되는 GBUToken의 ABI 넣기
-            //     var ClientReceipt = web3.eth.contract(contractAbi);//가져온 abi로 javascript 객체인것처럼 상호작용하기 위한 작업
-            //     var clientReceiptContract = ClientReceipt.at(receiver /* address */);
-            //     //event Transfer(address indexed from, address indexed to, uint256 value);라는 ERC20Basic에 있는 이벤트에 대해서 가져오는 것임
-            //     var event = clientReceiptContract.Transfer(function (error, result) {
-            //         if (!error) console.log(result);  //가져온걸 result에 저장하고 event에 저장?
-            //     });
-            // }
-            
-            // function takebackEventLog() {  //환수를 실행했음에 대한 정보
-            //     var contractAbi = abi;   //컴파일러에 의해 생성되는 GBUToken의 ABI 넣기
-            //     var ClientReceipt = web3.eth.contract(contractAbi);//가져온 abi로 javascript 객체인것처럼 상호작용하기 위한 작업
-            //     var clientReceiptContract = ClientReceipt.at("0xB3feAF3c748C3F01FB218EA86F80D36DDBEeF1d7" /* address */);
-            //     //event Transfer(address indexed from, address indexed to, uint256 value);라는 ERC20Basic에 있는 이벤트에 대해서 가져오는 것임
-            //     var event = clientReceiptContract.Transfer(function (error, result) {
-            //         if (!error) console.log(result);  //가져온걸 result에 저장하고 event에 저장?
-            //     });
-            // }
-    
-
-
         });
      
     </script>
