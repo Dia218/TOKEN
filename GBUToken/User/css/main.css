@@ -42,7 +42,7 @@ body {
 div.pull-left { float: left; }
 div.bar { float: left; }
 #headercontainer {
-   background-color: navy;
+   background-color: #191970;
    color: white;
    position: relative;
    overflow: auto;
@@ -51,7 +51,7 @@ div.bar { float: left; }
 #header {
     height: 200px;
     position: relative;
-    background-color: navy;
+    background-color: #191970;
     color: white;
 }
 #nav {
@@ -86,13 +86,12 @@ div.list>ul>li {
 }
 #footer {
      text-align: center;
-     margin: 20px 20px;
-     background-color: rgb(238, 244, 253);
+     margin-top: 200px;  
  }
 #header {
     height: 200px;
     position: relative;
-    background-color: navy;
+    background-color: #191970;
     color: white;
 }
 #header>h1 :link{
