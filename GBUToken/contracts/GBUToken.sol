@@ -5,7 +5,7 @@ import 'openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
 contract GBUToken is StandardToken {//StandardToken을 상속하여 기능 활용
     string public constant name = 'GBU Data Links Token';
     string public constant symbol = 'GBU';
-    uint8 public constant decimals = 2;
+    uint8 public constant decimals = 2; //0.01단위로
     uint constant _initial_supply  = 2100000000;
     address public admin;   //토큰 쪽에도 컨트랙 만든 사람 인식할 수 있도록
 
@@ -34,7 +34,7 @@ contract GBUToken is StandardToken {//StandardToken을 상속하여 기능 활�
         return balanceOf(_user);
     }
 
-    function takeBackToken(address _user, uint256 _token) internal onlyOwner{ //토큰 환수를 위한 기능 admin만 사용할 수 있도록 하고 internal
+    function takeBackToken(address _user, uint256 _token) public onlyOwner{ //토큰 환수를 위한 기능 admin만 사용할 수 있도록 하고 internal
         require(_token <= balances[_user]); //사용자의 밸런스보다 작거나 같은 토큰량 검사
         balances[_user] = balances[_user].sub(_token);  //사용자 밸런스 감소
         balances[admin] = balances[admin].add(_token);  //admin 밸런스 증가

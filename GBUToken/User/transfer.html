@@ -8,9 +8,14 @@
     <title>User Page</title>
 
     <link rel="stylesheet" type="text/css" href="css/main.css">
-
     <script src="js/web3.min.js"></script>
-    <script src="./link.js"></script>
+    <style>
+        button {
+            font-weight: bold;
+            background-color: #191970;
+            color: white;
+        }
+    </style>
 </head>
 <body>
 	<header id="header">
@@ -20,7 +25,7 @@
         <div class="pull-left">
           <ul class="menu">
              <li class="detail">
-                 <span class="menu-title" ><a href="User 본인 계정 정보.html">Connect Wallet</a></span>
+                 <span class="menu-title" ><a href="User_account_info.html">Connect Wallet</a></span>
              </li>
 			 <li class="detail">
                 <span class="menu-title" ><a href="Balance.html">Check Balance</a></span>
@@ -36,12 +41,11 @@
 
     <div class="container">
 		<label for="name" class="col-lg-2 control-label"><h3>Transfer</h3></label>
-		<p>From : &nbsp &nbsp &nbsp <input id="From" type="text"> </p>
-		<p>To : &nbsp &nbsp &nbsp &nbsp &nbsp <input id="To" type="text"> </p>
-        <p>Amount : &nbsp <input id="Amount" type="text"></p>
+		<label for="From"><p>From : &nbsp &nbsp &nbsp </label><input id="From" type="text" disabled="disabled"> </p>
+		<label for="To"></label><p>To : &nbsp &nbsp &nbsp &nbsp &nbsp </label><input id="To" type="text"> </p>
+        <label for="Amount"></label><p>Amount : &nbsp </label><input id="Amount" type="text"></p>
         <button id="Transfer">Transfer</button>
         <p>Transaction Hash : &nbsp  <span id="Tx"></span></p>
-
     </div>
 	<div id="footer">
         <ul>
@@ -50,6 +54,52 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script>
+    /* Transfer */
+    if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        } else {
+                // set the provider you want from Web3.providers
+            web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
+        }
+        //본인의 메타마스크 지갑의 주소를 반환
+        async function getAccount() {
+            const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+            const account = accounts[0];
+            return account;
+        }
+        //미리 메타마스크의 내 지갑 주소를 적어두기
+        getAccount().then(function(account){
+            $('#From').val(account);
+        });
 
+    $('#Transfer').click(function() {
+        $('#Tx').text('');
+        var _from = $('#From').val();
+        var _to = $('#To').val();
+        var _Amount = $('#Amount').val();
+        var txnObject = {   //보내지는 트랜잭션 블록
+            "from":_from,
+            "to": _to,
+            "value": web3.utils.toWei(_Amount,'ether'),
+            // "gas": 21000,         (optional)
+            // "gasPrice": 4500000,  (optional)
+            // "data": 'For testing' (optional)
+            // "nonce": 10           (optional)
+        }
+    
+        web3.eth.sendTransaction(txnObject, function(error, result){
+            if(error){
+                console.log( "Transaction error" ,error);
+            }
+            else{
+                var txn_hash = result; //Get transaction hash
+                $('#Tx').text(txn_hash);
+            }
+
+        });
+        
+    });
+    </script>
 </body>
 </html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Main Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            background-color: #191970;
+            color: white;
+        }
+
+        h1 {
+            padding: 20px 30px;
+        }
+
+        h4 {
+            padding: 20px 30px;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        body {
+            margin: 0 auto;
+            width: 1200px;
+        }
+
+        #mheader {
+            text-align: center;
+            padding: 100px;
+        }
+
+        #mbutton {
+            margin: auto;
+            display: block;
+            text-align: center;
+        }
+
+        button {
+            display: block;
+            background-color: white;
+            color: black;
+            margin: auto;
+            padding: 2em 4em;
+            text-align: center;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        #mfooter {
+            text-align: center;
+            margin: 80px 20px;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <header id="mheader">
+        <h1>Welcome to Kyonggi Chain's DApp</h1>
+    </header>
+
+    <div id="mbutton">
+        <h4>If you have 'MetaMask' acoount click button</h4>
+        <button id="btn" type="button" onclick="location.href='User_account_info.html' ">Start</button>
+        <h4>If you don't have 'MetaMask' acoount click button</h4>
+        <button id="btn" type="button"
+            onclick="location.href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=ko'">Create
+            Account</button>
+    </div>
+
+    <div id="mfooter">
+        <ul>
+            <li>© By_경기체인. All rights reserved.</li>
+        </ul>
+    </div>
+</body>
+
+</html>
