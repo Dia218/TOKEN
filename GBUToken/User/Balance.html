@@ -9,6 +9,15 @@
 
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <script src="js/web3.min.js"></script>
+<style>
+    button {
+        margin: 20px 160px;
+        padding: 20px 20px;
+        font-weight: bold;
+        background-color: #191970;
+        color: white;
+    }
+</style>
 </head>
 <body>
 	<header id="header">
@@ -18,7 +27,7 @@
         <div class="pull-left">
           <ul class="menu">
              <li class="detail">
-                 <span class="menu-title" ><a href="User 본인 계정 정보.html">Connect Wallet</a></span>
+                 <span class="menu-title" ><a href="User_account_info.html">Connect Wallet</a></span>
              </li>
              <li class="detail">
                 <span class="menu-title" ><a href="Balance.html">Check Balance</a></span>
@@ -31,12 +40,11 @@
          </ul>
         </div>
     </nav>
-
     <div class="container">
         <label for="name" class="col-lg-2 control-label"><h3>Balance</h3></label>
 		<p>Account : <input id="Account" type="text"> </p>
-        <p>Balance : <input id="Balance" type="text"></p>
 		<button id="checkBalance">Check Balance</button>
+        <p>Balance : <input id="Balance" type="text"></p>
     </div>
 	
     <div id="footer">

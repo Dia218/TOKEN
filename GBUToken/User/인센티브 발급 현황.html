@@ -7,7 +7,13 @@
 
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <script src="js/web31.min.js"></script>
-
+ <style>
+      button {
+          font-weight: bold;
+          background-color: #191970;
+          color: white;
+      }
+  </style>
 </head>
 
 <body>
@@ -18,7 +24,7 @@
         <div class="pull-left">
             <ul class="menu">
                 <li class="detail">
-                    <span class="menu-title"><a href="User 본인 계정 정보.html">Connect Wallet</a></span>
+                    <span class="menu-title"><a href="User_account_info.html">Connect Wallet</a></span>
                 </li>
                 <li class="detail">
                     <span class="menu-title"><a href="Balance.html">Check Balance</a></span>
@@ -32,10 +38,6 @@
             </ul>
         </div>
     </nav>
-    <div class="container3">
-      <label for="From"><p>From : &nbsp &nbsp &nbsp </label><input id="From" type="text" disabled="disabled"> </p>
-      <button id="Approve">approve</button>
-    </div>
     
     <div class="container">
       
@@ -46,16 +48,6 @@
         <button id="Incentive">Send Incentive</button>
         <p>Transaction Hash : &nbsp  <span id="Tx"></span></p>
     </div>
-    <div class="container2">
-		<label for="name" class="col-lg-2 control-label"><h3>Incentive</h3></label>
-		<label for="User"><p>User : &nbsp &nbsp &nbsp </label><input id="User" type="text"> </p>
-        <label for="IncentiveAmount"><p>User's Incentive : </label><input id="IncentiveAmount" type="text" disabled='disabled'></p>
-        <button id="checkIncentive">Check Incentive</button>
-        <p>Transaction Hash : &nbsp  <span id="Tx"></span></p>
-    </div>
-    
-
-
     <div id="footer">
         <ul>
             <li>© By_경기체인. All rights reserved.</li>
