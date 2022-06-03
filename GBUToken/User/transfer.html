@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="author" content="Kenneth Hu">
+    <title>User Page</title>
+
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script src="js/web3.min.js"></script>
+    <style>
+        button {
+            font-weight: bold;
+            background-color: #191970;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+	<header id="header">
+        <h1><a href="">User Page</a></h1>
+    </header>
+    <nav id="nav">
+        <div class="pull-left">
+          <ul class="menu">
+             <li class="detail">
+                 <span class="menu-title" ><a href="User 본인 계정 정보.html">Connect Wallet</a></span>
+             </li>
+			 <li class="detail">
+                <span class="menu-title" ><a href="Balance.html">Check Ether's Balance</a></span>
+            </li>
+             <li class="detail">
+                 <span class="menu-title" ><a href="transfer.html">Transfer Ether</a></span>
+             </li><li class="detail">
+                <span class="menu-title" ><a href="인센티브 발급 현황.html">Approve & Check & Transfer Incentive</a></span>
+            </li>
+         </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+		<label for="name" class="col-lg-2 control-label"><h3>Transfer</h3></label>
+		<label for="From"><p>From : &nbsp &nbsp &nbsp </label><input id="From" type="text" disabled="disabled"> </p>
+		<label for="To"></label><p>To : &nbsp &nbsp &nbsp &nbsp &nbsp </label><input id="To" type="text"> </p>
+        <label for="Amount"></label><p>Amount : &nbsp </label><input id="Amount" type="text"></p>
+        <button id="Transfer">Transfer</button>
+        <p>Transaction Hash : &nbsp  <span id="Tx"></span></p>
+    </div>
+	<div id="footer">
+        <ul>
+            <li>© By_경기체인. All rights reserved.</li>
+        </ul>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script>
+        if (typeof window.ethereum !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        }
+        else{
+            web3 = ethereum.request({ method: 'eth_requestAccounts' });
+        }
+
+        
+        //본인의 메타마스크 지갑의 주소를 반환
+        async function getAccount() {
+            const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+            const account = accounts[0];
+            return account;
+        }
+        //미리 메타마스크의 내 지갑 주소를 적어두기
+        getAccount().then(function(account){
+            $('#From').val(account);
+        });
+
+    $('#Transfer').click(function() {
+        $('#Tx').text('');
+        var _from = $('#From').val();
+        var _to = $('#To').val();
+        var _Amount = $('#Amount').val();
+        var txnObject = {   //보내지는 트랜잭션 블록
+            "from":_from,
+            "to": _to,
+            "value": web3.utils.toWei(_Amount,'ether'),
+            // "gas": 21000,         (optional)
+            // "gasPrice": 4500000,  (optional)
+            // "data": 'For testing' (optional)
+            // "nonce": 10           (optional)
+        }
+    
+        web3.eth.sendTransaction(txnObject, function(error, result){
+            if(error){
+                console.log( "Transaction error" ,error);
+            }
+            else{
+                var txn_hash = result; //Get transaction hash
+                $('#Tx').text(txn_hash);
+            }
+
+        });
+        
+    });
+    </script>
+</body>
+</html>
