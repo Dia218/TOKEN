@@ -91,8 +91,8 @@
               $('#From').val(account);
               $('#User').val(account);
             });
-            var GBUToken = "0xfa9813C429840533e67c09ECB03463A716BcB894";
-            var GBUTManager = "0x04741252D50FfC4ffaA255B9b87b39E604b10cCa";
+            var GBUToken = "0xc0fd15dF69f2397B8f1B4DB201f6d3Fa9ee25d50";
+            var GBUTManager = "0x1e963Bf93cCDE9b7eFadA737B5DCB868805dB6aa";
             var GBUTokenAbi = [
     {
       "inputs": [],
@@ -148,6 +148,31 @@
         }
       ],
       "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "isTakeBack",
       "type": "event"
     },
     {
@@ -452,26 +477,6 @@
       "payable": false,
       "stateMutability": "view",
       "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_user",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_token",
-          "type": "uint256"
-        }
-      ],
-      "name": "takeBackToken",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
     }];
             var GBUTManagerAbi = [
     {
@@ -495,6 +500,31 @@
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "isPutIncentive",
+      "type": "event"
     },
     {
       "payable": true,
@@ -623,7 +653,7 @@
                 var contractAbi = GBUTokenAbi;   //컴파일러에 의해 생성되는 GBUToken의 ABI 넣기
                 var ClientReceipt = web3.eth.contract(contractAbi);//가져온 abi로 javascript 객체인것처럼 상호작용하기 위한 작업
                 var clientReceiptContract = ClientReceipt.at(receiver /* address */);
-                //event Transfer(address indexed from, address indexed to, uint256 value);라는 ERC20Basic에 있는 이벤트에 대해서 가져오는 것임
+
                 var event = clientReceiptContract.Transfer(function (error, result) {
                     if (!error) console.log(result);  //가져온걸 result에 저장하고 event에 저장?
                 });
@@ -636,7 +666,7 @@
                 var _to = $('#To').val();
                 var _incentive = $('#Amount').val();
                 sendIncentive(_from, _to, _incentive);
-                //var event = tranferEventLog();  //이벤트 로그 저장
+                console.log(tranferEventLog());  //이벤트 로그 저장
             });
 
             //토큰 확인 기능
@@ -648,13 +678,12 @@
               }
               await $('#IncentiveAmount').val(bal);
             }
-            
+            //버튼 클릭 시 인센티브량 표시 함수 호출
             $('#checkIncentive').click(function() {
                 var _user = $('#User').val();
                 viewBalance(_user);
             });
         });
-     
     </script>
 </body>
 
