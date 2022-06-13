@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>SB Admin 2 - Dashboard</title>
+    <!-- Custom fonts for this template-->
+    <link rel="stylesheet" href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="/css/sb-admin-2.css"
+        rel="stylesheet">
+
+    <!-- Custom styles for this page -->
+    <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="/js/web3.min.js"></script>
+</head>
+
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">GBU Admin</div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar -->
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">                        
+                        
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                          <a class="nav-link dropdown-toggle"  id="userDropdown" role="button"
+                              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <a class="mr-2 d-none d-lg-inline text-gray-600 small" href="login.html">Logout</a>
+                          </a>
+                      </li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                    </div>
+                    <!-- Content Row -->
+                    <div class="row">
+                        <button id="Approve" class="btn btn-primary" style = "margin-bottom: 5px; margin-left: 10px">Approve for All Incentives</button>
+                        <p>&nbsp&nbsp&nbsp Admin have <span class="showIncentive"></span> : <span class="showApprove"></span> Approve </p> <!--관리자의 GBUTManager에의 토큰 허가량 표시-->
+                        <div class="col-lg-12 mb-4">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Incentive Token Transfer</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p>Enter User and Token to Transfer.</p>                                     
+                                    <input type="text" class="form-control bg-light border-0 small col-lg-5 mb-2" placeholder="Address for reciever" id="id">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control bg-light border-0 small col-lg-5 mb-2" placeholder="Incentive to Transfer" id="incentive">
+                                        &nbsp&nbsp<span class="showReceiverIncentive"></span> <!--받은 사람의 인센티브량 표시-->
+                                    </div>
+                                    
+                                    <a href="#" class="btn btn-primary btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                        <span id="Incentive" class="text">Incentive Transfer</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- Illustrations -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Token Take Back</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p>Enter Address and Token to Take Back.</p>
+                                    <input type="text" class="form-control bg-light border-0 small col-lg-5 mb-2" placeholder="Address for Target" id="id_takeBack">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control bg-light border-0 small col-lg-5 mb-2" placeholder="Target's Incentive to Take Back" id="amount_takeBack">
+                                        <div class="input-group-append col-lg-3">
+                                            <button class="btn btn-primary mb-2"  id="entire_takeBack" type="button">
+                                                Entire Take Back
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <a href="#" class="btn btn-primary btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                        <span class="text" id="take_back">Take Back</span>
+                                        
+                                    </a>&nbsp&nbsp<span class="showTakeBack"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">UserTable</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="user_dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Address</th>
+                                            <th>Balance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% for(var i=0;i < data.length; i++){ %>
+                                            <tr class="user">
+                                                <td>
+                                                    <%= data[i].id %>
+                                                </td>
+                                                <td>
+                                                    <%= data[i].account %>
+                                                </td>
+                                                <td>0</td>
+                                            </tr>
+                                            <% } %>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Address</th>
+                                            <th>Balance</th>
+                                        </tr>
+                                    </tfoot>
+                                    
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; 경기체인 2022</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="/js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="/vendor/chart.js/Chart.min.js"></script>
+    <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="/js/demo/chart-area-demo.js"></script>
+    <script src="/js/demo/chart-pie-demo.js"></script>
+    <script src="/js/demo/datatables-demo.js"></script>
+    <!-- connect contract -->
+    <script>
+        $(document).ready(function () {
+            console.log("ready!");
+            if (typeof window.ethereum !== 'undefined') {
+                web3 = new Web3(web3.currentProvider);
+            }
+            else {
+                web3 = ethereum.request({ method: 'eth_requestAccounts' });
+            }
+            async function getAccount() {
+                const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                const account = accounts[0];
+                return account;
+            }
+            console.log(getAccount());
+            //가나슈를 사용함에 따라 각 사용자마다 변경되어야할 주소들
+            var GBUToken = "0x9F0ebA0Efe33656538F9f312894454a46Ed21BC9";
+            var GBUTManager = "0xB4cb4657345fED56c1a2B829f5d600c0293aC41D";
+            var GBUTokenAbi = [
+    {
+      "inputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "Approval",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "isTakeBack",
+      "type": "event"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "admin",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_owner",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_spender",
+          "type": "address"
+        }
+      ],
+      "name": "allowance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_spender",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_owner",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "decimals",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_spender",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_subtractedValue",
+          "type": "uint256"
+        }
+      ],
+      "name": "decreaseApproval",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_spender",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_addedValue",
+          "type": "uint256"
+        }
+      ],
+      "name": "increaseApproval",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "name",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "symbol",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "totalSupply",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "name": "transfer",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferFrom",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_receiver",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_limitValue",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "name": "approveToken",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_user",
+          "type": "address"
+        }
+      ],
+      "name": "myToken",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_user",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_token",
+          "type": "uint256"
+        }
+      ],
+      "name": "takeBackToken",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }];
+            var GBUTManagerAbi = [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_GBUToken",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_admin",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_incentivelimit",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "isPutIncentive",
+      "type": "event"
+    },
+    {
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "fallback"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "admin",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "gbuToken",
+      "outputs": [
+        {
+          "internalType": "contract StandardToken",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_user",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_incentive",
+          "type": "uint256"
+        }
+      ],
+      "name": "putIncentive",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_incentive",
+          "type": "uint256"
+        }
+      ],
+      "name": "sendIncentive",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_user",
+          "type": "address"
+        }
+      ],
+      "name": "viewBalanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }];
+            var TokenContract=new web3.eth.Contract(GBUTokenAbi, GBUToken);        
+            var ManagerContract = new web3.eth.Contract(GBUTManagerAbi, GBUTManager);
+            console.log(ManagerContract);
+
+            //call은 read만 하는 function인 경우, send는 tx를 만들어야 하는 function의 경우 사용할 것.
+
+            //토큰 매니저에게 모든 토큰 위임
+            async function approveTokensAll(){
+              var address = await getAccount();
+              TokenContract.methods.totalSupply().call().then(function (totalSupply) {
+              try{//GBUTManager가 자신의 토큰을 대신 전송이 가능하도록 허가
+                console.log(totalSupply);
+                TokenContract.methods.approveToken(GBUTManager, totalSupply, totalSupply).send({from: address}); 
+              }catch(err) {
+                console.log(err);
+              }
+              });
+            }
+            //해당 버튼 클릭 시 TokenManager를 통한 토큰 전송 허용량 설정
+            $('#Approve').click(function() {
+                var approveAmount = $('#ApproveLimit').val();
+                approveTokensAll();  //전체 토큰
+            });
+
+            //admin의 보유 인센티브량
+            const showIncentive = document.querySelector('.showIncentive');
+            async function getIncentive(){
+              const account = await getAccount();
+              var bal;
+              try{
+                bal = await TokenContract.methods.myToken(account).call();
+                showIncentive.innerHTML = bal;
+                }catch(err) {
+                    alert(err); // TypeError: failed to fetch
+              }
+              return bal;
+              } getIncentive();//페이지 로드 시 인센티브량 표시
+            //자신의 GBUTManager에의 전송 허용량 가져오는 함수
+            const showAllowance = document.querySelector('.showApprove');
+            async function getAllowance(){
+              const account = await getAccount();
+              var a;
+              try{
+                a = await TokenContract.methods.allowance(account, GBUTManager).call();
+                showAllowance.innerHTML = a;
+              }catch(err) {
+                alert(err); // TypeError: failed to fetch
+              }
+            }getAllowance();//페이지 로드 시 허용량 표시
+
+            //버튼 클릭 시 인센티브량 표시 함수 호출
+            $('#checkIncentive').click(function() {
+                var _user = $('#User').val();
+                viewBalance(_user);
+            });
+           
+            //토큰 전송 기능
+            const showReceiverIncentive = document.querySelector('.showReceiverIncentive');
+            async function putIncentive(_to, _incentive){
+              var address = await getAccount();
+              await ManagerContract.methods.putIncentive(_to, _incentive).send({from: address});
+              showReceiverIncentive.innerHTML = "Now this user have... "+ await ManagerContract.methods.viewBalanceOf(_to).call();
+            }
+            //인센티브 지급 버튼을 클릭했을 때
+            $('#Incentive').click(function() {
+                var _to = $('#id').val();
+                if (_to == "") {
+                    alert("please input receiver's address");
+                    return;
+                }
+                var _incentive = $('#incentive').val();
+                if (_incentive == "") {
+                    alert("please input incentive");
+                    return;
+                }
+                else if(_incentive == 0){
+                    alert("there is no input incentive");
+                    return;
+                }
+                putIncentive(_to, _incentive);
+
+            });
+            async function getEvent(){
+              let events = await TokenContract.getPastEvents('isTakeBack', {filter:{fromBloack: 'latest', toBlock: 'latest'}});
+              showTakeBack.innerHTML = "*Check console";
+              console.log(Object.values(events));
+
+            }
+            //GBUToken의 토큰 환수 기능 호출
+            const showTakeBack = document.querySelector('.showTakeBack');
+            async function takeBackIncentive(_target, _incentive){
+              var address = await getAccount();
+              await TokenContract.methods.takeBackToken(_target, _incentive).send({from: address});
+              await getEvent();
+            }
+
+            //버튼 클릭 시 토큰 환수
+            $("#take_back").click(function(){
+                var _target = $("#id_takeBack").val();
+                var _incentive = $("#amount_takeBack").val();
+                if (_target == "") {
+                    alert("please input address");
+                    return;
+                }
+                takeBackIncentive(_target, _incentive);
+            })
+
+            //전체 토큰 환수를 위한 버튼을 클릭했을 시
+            $("#entire_takeBack").click(function(){
+                var addr = $("#id_takeBack").val();
+                if (addr == "") {
+                    alert("please input address");
+                    return;
+                }
+                viewBalanceOf(addr);
+            })
+
+            async function viewBalanceOf(_user) {
+                try {
+                    var amount = await ManagerContract.methods.viewBalanceOf(_user).call();
+                } catch (err) {
+                    alert(err);
+                }
+                await $("#amount_takeBack").val(amount);
+            }
+            async function balanceOfUser(_user,obj){
+                try {
+                    var amount = await ManagerContract.methods.viewBalanceOf(_user).call();
+                    obj.innerHTML = amount;
+                    //alert(amount);
+                } catch (err) {
+                   obj.innerHTML = "_";
+                }
+            }
+            async function putUser_to_balance(){
+                var trs = document.querySelectorAll(".user");
+                for(var i=0;i<trs.length;i++){
+                    var account = trs[i].children[1].textContent.trim();
+                    balanceOfUser(account, trs[i].children[2]);
+                }
+            }
+            putUser_to_balance();
+        })
+    </script>
+</body>
+
+</html>
