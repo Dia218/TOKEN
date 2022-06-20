@@ -949,6 +949,8 @@
                    obj.innerHTML = "_";
                 }
             }
+            // user table의 balance란 채우는 기능
+            // (각 유저별 account를 이용해 incentive양을 구함)
             async function putUser_to_balance(){
                 var trs = document.querySelectorAll(".user");
                 for(var i=0;i<trs.length;i++){
@@ -956,7 +958,7 @@
                     balanceOfUser(account, trs[i].children[2]);
                 }
             }
-            putUser_to_balance();
+            putUser_to_balance(); 
         })
     </script>
 </body>
