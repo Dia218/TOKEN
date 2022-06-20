@@ -15,7 +15,8 @@ contract GBUToken is StandardToken {//StandardToken을 상속하여 기능 활�
         balances[msg.sender] = _initial_supply;
         emit Transfer(msg.sender, admin, _initial_supply); //처음에 전체 토큰이 컨트랙 생성자(자신)에게로 보내졌음을 나타내는 이벤트
     }
-
+// REJECT any incoming ether
+	function() payable external {revert();}	//안에 ; 안붙이면 컴파일 에러
 //- user가 다른 user와 token 거래 가능케 하는 기능 approve 이용
     function approveToken(address _receiver, uint _limitValue, uint _value) public {  //토큰값 데이터 타입 자연수 uint로 
         require(_value <= _limitValue);

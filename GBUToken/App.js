@@ -4,7 +4,7 @@ const mysqlConobj = require('./routes/database');
 const db = mysqlConobj.init();
 var data_list;
 mysqlConobj.db_open(db);
-db.query("select * from user", function (err, result) {
+db.query("select * from user order by id", function (err, result) {
     if (err) { 
         console.log(err);
     }
@@ -30,6 +30,10 @@ app.get("/", (req, res) => {
 app.get("/user", (req, res) => {
     console.log('USER_PAGE');
    res.render("user_page.ejs", { 'data': data_list });
+});
+app.get("/login", (req, res) => {
+    console.log('LOGIN_PAGE');
+   res.render("login.ejs");
 });
 app.use(function(req, res, next) {
     console.log(2)

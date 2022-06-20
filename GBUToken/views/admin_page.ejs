@@ -77,7 +77,7 @@
                         <li class="nav-item dropdown no-arrow">
                           <a class="nav-link dropdown-toggle"  id="userDropdown" role="button"
                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              <a class="mr-2 d-none d-lg-inline text-gray-600 small" href="login.html">Logout</a>
+                              <a class="mr-2 d-none d-lg-inline text-gray-600 small" href="login">Logout</a>
                           </a>
                       </li>
 
@@ -251,8 +251,8 @@
             }
             console.log(getAccount());
             //가나슈를 사용함에 따라 각 사용자마다 변경되어야할 주소들
-            var GBUToken = "0x9F0ebA0Efe33656538F9f312894454a46Ed21BC9";
-            var GBUTManager = "0xB4cb4657345fED56c1a2B829f5d600c0293aC41D";
+            var GBUToken = "0x6b7Ae8C7d766C9aF2D313ec2Bd57c7B54D028db9";
+            var GBUTManager = "0xc3EdBE23381043f4623F4A450ED82CD9314bEea0";
             var GBUTokenAbi = [
     {
       "inputs": [],
@@ -334,6 +334,11 @@
       ],
       "name": "isTakeBack",
       "type": "event"
+    },
+    {
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "fallback"
     },
     {
       "constant": true,
@@ -806,7 +811,7 @@
       "payable": false,
       "stateMutability": "view",
       "type": "function"
-    }];
+    }];  
             var TokenContract=new web3.eth.Contract(GBUTokenAbi, GBUToken);        
             var ManagerContract = new web3.eth.Contract(GBUTManagerAbi, GBUTManager);
             console.log(ManagerContract);
