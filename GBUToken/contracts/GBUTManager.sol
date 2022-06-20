@@ -6,7 +6,7 @@ contract GBUTManager {
 	StandardToken public gbuToken;	//GBUToken 기능 쓰기 위한 객체
 	address public admin;	//컨트랙을 만든 주인EOA 주소
 	uint256 private INCENTIVE_LIMIT;	//1회 인센티브 지급 제한량
-	event isPutIncentive(address indexed from, address indexed to, uint256 value);
+	event isPutIncentive(address indexed from, address indexed to, uint256 value);//인센티브 지급 이벤트. 수정 및 필터용 인덱스 변수 추가 가능
 
 	constructor(address _GBUToken, address _admin, uint256 _incentivelimit) public { 		
 		gbuToken = StandardToken(_GBUToken); 		
@@ -15,9 +15,10 @@ contract GBUTManager {
 	}
 
 	// REJECT any incoming ether
-	function() payable external {revert();}	//안에 ; 안붙이면 컴파일 에러
+	function() payable external {revert();}	//안에 ; 안붙이면 컴파일 에러 주의
 
-	modifier onlyOwner {	//기능 이름 onlyOnwer admin만이 사용할 수 있는 기능 제한
+	//모디파이어 onlyOnwer: admin만이 사용할 수 있는 기능에 대한 제한
+	modifier onlyOwner {	
 		require(msg.sender == admin);
 		_;	//모디파이어가 실제 실행되는 기능의 실제 코드에 해당되는 부분
 	}
@@ -25,7 +26,7 @@ contract GBUTManager {
 	// 특정 사용자에게 인센티브 지급
 	function putIncentive(address _user, uint256 _incentive) public onlyOwner{
 		require(_incentive <= INCENTIVE_LIMIT); 		//인센티브 제한은 일단 고정으로
-		gbuToken.transferFrom(admin, _user, _incentive);	//admin의 토큰을 사용자에게로 GBUTManager에게 대신 전송 요청
+		gbuToken.transferFrom(admin, _user, _incentive);	//admin의 토큰을 사용자에게로, GBUTManager에게 대신 전송 요청
 		emit isPutIncentive(admin, _user, _incentive);	//관리자의 인센티브 지급에 대해선 이벤트를 하나 더 보내 구별되도록 함.
 	}
 	//사용자간의 인센티브 전송을 위한 transferFrom필요(GBUTManager에 대해 approve하므로 이쪽에 필요)

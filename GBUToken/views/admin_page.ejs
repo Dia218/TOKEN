@@ -251,8 +251,8 @@
             }
             console.log(getAccount());
             //가나슈를 사용함에 따라 각 사용자마다 변경되어야할 주소들
-            var GBUToken = "0x6b7Ae8C7d766C9aF2D313ec2Bd57c7B54D028db9";
-            var GBUTManager = "0xc3EdBE23381043f4623F4A450ED82CD9314bEea0";
+            var GBUToken = "0x2E3e8C18a400CdF28AF9F57C22Fe94A56558d712";
+            var GBUTManager = "0x654602400f65aA209666AcC49f3E7054ac58820b";
             var GBUTokenAbi = [
     {
       "inputs": [],
@@ -811,7 +811,7 @@
       "payable": false,
       "stateMutability": "view",
       "type": "function"
-    }];  
+    }];
             var TokenContract=new web3.eth.Contract(GBUTokenAbi, GBUToken);        
             var ManagerContract = new web3.eth.Contract(GBUTManagerAbi, GBUTManager);
             console.log(ManagerContract);
@@ -894,6 +894,7 @@
                 putIncentive(_to, _incentive);
 
             });
+            //토큰 환수에 대해 발생했던 이벤트를 가져오는 기능. 이러한 형태로 다양한 이벤트를 받을 수 있으며 필요에 따라 필터 등 수정 가능.
             async function getEvent(){
               let events = await TokenContract.getPastEvents('isTakeBack', {filter:{fromBloack: 'latest', toBlock: 'latest'}});
               showTakeBack.innerHTML = "*Check console";
@@ -919,7 +920,7 @@
                 takeBackIncentive(_target, _incentive);
             })
 
-            //전체 토큰 환수를 위한 버튼을 클릭했을 시
+            //전체 토큰 환수를 위한 버튼을 클릭했을 시 해당 사용자의 전체 토큰량을 자동으로 입력
             $("#entire_takeBack").click(function(){
                 var addr = $("#id_takeBack").val();
                 if (addr == "") {
@@ -928,7 +929,7 @@
                 }
                 viewBalanceOf(addr);
             })
-
+            //해당 사용자의 인센티브량 표시
             async function viewBalanceOf(_user) {
                 try {
                     var amount = await ManagerContract.methods.viewBalanceOf(_user).call();
@@ -937,6 +938,8 @@
                 }
                 await $("#amount_takeBack").val(amount);
             }
+
+            //사용자 목록에서 해당 사용자의 인센티브량을 표시하기 위한 기능
             async function balanceOfUser(_user,obj){
                 try {
                     var amount = await ManagerContract.methods.viewBalanceOf(_user).call();

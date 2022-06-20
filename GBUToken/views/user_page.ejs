@@ -344,13 +344,13 @@
         else{
             web3 = ethereum.request({ method: 'eth_requestAccounts' });
         }
-
+        //각각의 정보를 화면에 표시하기 위한 element 객체를 가져온다.
         const showAccount = document.querySelector('.showAccount');
         const showBalance = document.querySelector('.showBalance');
         const showIncentive = document.querySelector('.showIncentive');
         const showAllowance = document.querySelector('.showApprove');
-        var GBUToken = "0x6b7Ae8C7d766C9aF2D313ec2Bd57c7B54D028db9";
-        var GBUTManager = "0xc3EdBE23381043f4623F4A450ED82CD9314bEea0";
+        var GBUToken = "0x2E3e8C18a400CdF28AF9F57C22Fe94A56558d712";
+        var GBUTManager = "0x654602400f65aA209666AcC49f3E7054ac58820b";
         var GBUTokenAbi = [
     {
       "inputs": [],
@@ -909,8 +909,8 @@
       "payable": false,
       "stateMutability": "view",
       "type": "function"
-    }];  
-                 
+    }];
+                      
         var TokenContract=new web3.eth.Contract(GBUTokenAbi, GBUToken);
         var ManagerContract=new web3.eth.Contract(GBUTManagerAbi, GBUTManager);
 
@@ -959,7 +959,7 @@
             alert("please input right address");
             return;
           }
-          //call은 read만 하는 function인 경우, send는 tx를 만들어야 하는 function의 경우 사용
+          //call은 read만 하는 function인 경우, send는 tx를 만들어야 하는 function의 경우 사용(from으로 보내는 사람의 주소 명시)
           await TokenContract.methods.approveToken(_receiver, _limitValue, _value).send({from: address}); 
         }
         //TokenManager를 통한 토큰 전송 허용량 설정
@@ -969,7 +969,7 @@
               alert("please input Amount");
               return;
             }
-            approveTokens(GBUTManager, 100000, approveAmount);  //10만정도로 일단 최대 제한량 둠
+            approveTokens(GBUTManager, 100000, approveAmount);  //10만정도로 임의 최대 제한량 둠
             refreshApprove.innerHTML = "  Please Refresh Now";
         });
 
@@ -1026,7 +1026,8 @@
         //사용자간 인센티브 전송 버튼을 클릭했을 때
         $('#Incentive').click(function() {
           sendIncentive();
-        });        
+        });      
+          
         getAccount();
         getBalance();
         getIncentive();
